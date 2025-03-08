@@ -41,13 +41,145 @@ def send_email():
             subject=f"New Message from {name}",
             recipients=[""]  # Replace with your recipient email
         )
-        msg.body = f"""
-        Name: {name}
-        Email: {email}
-        Subject: {subject}
+        msg.html = f"""
+        <html>
+            <head>
+                <style>
+                    body {{
+                        font-family: Arial, sans-serif;
+                        background-color: #f4f4f4;
+                        color: #333;
+                        padding: 20px;
+                    }}
+                    .email-container {{
+                        background-color: #fff;
+                        padding: 20px;
+                        border-radius: 8px;
+                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                        max-width: 600px;
+                        margin: 0 auto;
+                    }}
+                    h1 {{
+                        color: #303030;
+                        font-size: 18px;
+                        margin-bottom: 20px;
+                        width:100%;
+                        background-color: rgb(240, 240, 240);
+                        padding: 10px 10px;
+                    }}
+                    p {{
+                        font-size: 16px;
+                        line-height: 1.6;
+                        margin-bottom: 10px;
+                        padding-left: 10px;
+                    }}
+                    .label {{
+                        font-weight: bold;
+                        color: #555;
+                        padding-left: 10px;
+                    }}
+                    .sbjt{{
+                        font-weight:bold;
+                        font-size: 20px;
+                        padding-left: 20px;
+                    }}
+                    .msg{{
+                        padding-left: 20px;
+                    }}
+                </style>
+            </head>
+            <body>
+                <div class="email-container">
+                    <h1>New Message Received</h1>
+                    <p><span class="label">Name:</span> {name}</p>
+                    <p><span class="label">Email:</span> {email}</p>
+                    <p class="sbjt">{subject}</p>
+                    <p class="msg">{message}</p>
+                </div>
+            </body>
+        </html>
+        """
 
-        Message:
-        {message}
+        mail.send(msg)
+        return jsonify({"message": "1"}), 200
+
+    except Exception as e:
+        print(e)
+        return jsonify({"error": str(e)}), 500
+    
+# send enquirires
+@app.route("/send-enquiry", methods = ['POST'])
+def sendEnquiry():
+    try:
+        # Extract data from the request
+        name = request.form.get('name')
+        email = request.form.get('email')
+        subject = request.form.get('subject')
+        message = request.form.get('message')
+        service = request.form.get('service')
+
+        # Validate required fields
+        if not all([name, email, subject, message, service]):
+            return jsonify({"error": "Missing required fields"}), 400
+
+        # Create and send the email
+        msg = Message(
+            subject=f"New Enquiry from {name}",
+            recipients=[""]  # Replace with your recipient email
+        )
+        # HTML content for the email
+        msg.html = f"""
+        <html>
+            <head>
+                <style>
+                    body {{
+                        font-family: Arial, sans-serif;
+                        background-color: #f4f4f4;
+                        color: #333;
+                        padding: 20px;
+                    }}
+                    .email-container {{
+                        background-color: #fff;
+                        padding: 20px;
+                        border-radius: 8px;
+                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                        max-width: 600px;
+                        margin: 0 auto;
+                    }}
+                    h1 {{
+                        color: #303030;
+                        font-size: 18px;
+                        margin-bottom: 20px;
+                        width:100%;
+                        background-color: rgb(240, 240, 240);
+                        padding: 10px 10px;
+                    }}
+                    p {{
+                        font-size: 16px;
+                        line-height: 1.6;
+                        margin-bottom: 10px;
+                    }}
+                    .label {{
+                        font-weight: bold;
+                        color: #555;
+                    }}
+                    .sbjt{{
+                        font-weight:bold;
+                        font-size: 20px;
+                    }}
+                </style>
+            </head>
+            <body>
+                <div class="email-container">
+                    <h1>New Enquiry Received</h1>
+                    <p><span class="label">Name:</span> {name}</p>
+                    <p><span class="label">Email:</span> {email}</p>
+                    <p><span class="label">Service:</span> {service}</p>
+                    <p class="sbjt">{subject}</p>
+                    <p>{message}</p>
+                </div>
+            </body>
+        </html>
         """
 
         mail.send(msg)
