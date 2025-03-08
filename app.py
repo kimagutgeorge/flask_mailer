@@ -10,7 +10,7 @@ load_dotenv()  # Load environment variables from .env file
 app = Flask(__name__)
 
 # Configure CORS
-CORS(app, resources={r"/*": {"origins": ["http://localhost:8081", "http://127.0.0.1:8081"]}}, supports_credentials=True)
+CORS(app, resources={r"/*": {"origins": ["http://localhost:8080", "http://127.0.0.1:8081"]}}, supports_credentials=True)
 
 # Configure Flask-Mail
 app.config["MAIL_SERVER"] = "smtp.gmail.com"
